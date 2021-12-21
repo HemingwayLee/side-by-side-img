@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% csrf_token %}
+
+<div class="container-fluid">
+  <div class="row content">
+    {% include "side.html" %}
+    <div class="col-sm-9">
+      <div id="msg"></div>
+      <h2>Comparison</h2>
+      <select id="photos">
+      </select>
+      <table id="verComparison" class="table table-striped">
+        <thead>
+          <tr>
+            <td>Title</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Version</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Method</td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Image</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  function getPhotos() {
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/images/all/';
+    
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: urlTarget,
+      success: function(data) {
+        console.log(data);
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);
+      },
+    });
+  }
+
+  getPhotos();
+</script>
+
+{% endblock %}

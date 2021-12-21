@@ -20,7 +20,9 @@ from main import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index),
+    path('page/comparison/', views.compare),
     path('page/signin/', views.signin),
     path('page/dosignin/', views.dosignin),
-    path('page/signout/', views.signout)
+    path('page/signout/', views.signout),
+    path('images/all/', views.imgfiles),
 ]

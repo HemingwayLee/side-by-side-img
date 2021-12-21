@@ -1,0 +1,61 @@
+<script>
+  function doSignout() {
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/page/signout/';
+    const urlRedirect = window.location.protocol + "//" + window.location.host + '/';
+    $.ajax({
+      type: "POST",
+      url: urlTarget,
+      success: function (data) {
+        window.location.href = urlRedirect;
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        $('#message').text(`${textStatus}`);
+      },
+    });
+  }
+
+  function csrfSafeMethod(method) {
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  }
+
+  $(document).ready(function () {
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+          xhr.setRequestHeader("X-CSRFToken", "{{csrf_token}}");
+        }
+      }
+    });
+
+    $('#signout').on('click', doSignout);
+  });
+</script>
+
+<div class="col-sm-3 sidenav">
+  <ul class="nav nav-pills nav-stacked">
+    <!-- <div id="my-photo" class="my_photo">
+      <img src="me.png" class="img-circle me">
+    </div> -->
+    <h3 style="text-align: center"><b>{{ACCOUNTNAME}}</b></h3>
+    <li id="dashboard">
+      <a href="javascript:void(0);"><i class="glyphicon glyphicon-th"></i> Dashboard</a>
+    </li>
+    <li id="comparison">
+      <a href="javascript:void(0);"><i class="glyphicon glyphicon-info-sign"></i> Comparison</a>
+    </li>
+    <li id="signout">
+      <a href="javascript:void(0);"><i class="glyphicon glyphicon-log-out"></i> Logout</a>
+    </li>
+  </ul>
+</div>
+
+<script>
+  const pageId = "{{PAGEID}}";
+  $(`#${pageId}`).addClass("active");
+
+  const urlDashboard = window.location.protocol + "//" + window.location.host + '/';
+  document.getElementById("dashboard").firstElementChild.setAttribute("href", urlDashboard);
+
+  const urlComparison = window.location.protocol + "//" + window.location.host + '/page/comparison/';
+  document.getElementById("comparison").firstElementChild.setAttribute("href", urlComparison);
+</script>

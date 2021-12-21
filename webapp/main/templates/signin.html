@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script>
+  function doSubmit(e) {
+    e.preventDefault();
+
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/page/dosignin/';
+    const urlRedirect = window.location.protocol + "//" + window.location.host + '/';
+    
+    $.ajax({
+      type: "POST",
+      url: urlTarget,
+      data: $(this).serialize(),
+      success: function (data) {
+        $("#signinModal").modal("hide");
+
+        // by default, it will have a sessionid in cookies
+        window.location.href = urlRedirect;
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        if (xhr.status == 404) {
+          $('#message').text("Invalid account or password");
+        } else {
+          $('#message').text("Internal server error");
+        }
+        $("#message").show();
+      },
+    });
+  }
+
+  $(document).ready(function () {
+    $("#signinModal").modal({
+      backdrop: 'static',
+      keyboard: false
+    });
+
+    $('#loginform').submit(doSubmit);
+  });
+</script>
+
+<div class="modal fade" id="signinModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="signinTitle" class="modal-title">Signin</h4>
+      </div>
+      <div class="modal-body">
+        <form id="loginform" method="post">
+          {% csrf_token %}
+          <label for="account">Account:</label>
+          <input name="account" id="account" style="width:100%;" oninput="$('#message').hide();"></input>
+          <label for="password">Password:</label>
+          <input type="password" name="password" id="password" style="width:100%;" oninput="$('#message').hide();"></input>
+          <div style="color: red" id="message"></div>
+          <hr>
+          <button class="btn btn-primary" type="submit" id="signin">
+            <i class="glyphicon glyphicon-log-out"></i> Login
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

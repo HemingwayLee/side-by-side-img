@@ -3,6 +3,7 @@ import json
 import traceback
 import datetime
 import logging
+from fnmatch import fnmatch
 from django.shortcuts import render
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
@@ -12,11 +13,33 @@ from django.views.decorators.http import require_http_methods
 
 @require_http_methods(["GET"])
 @login_required(login_url='/page/signin/')
+def imgfiles(request):
+    try:
+        folder = f"{settings.MEDIA_ROOT}"
+        patterns = ("*.jpg", "*.jpeg", "*.png", "*.tif")
+        files = [f.path for f in os.scandir(folder) if any(fnmatch(f, p) for p in patterns)]
+
+        return JsonResponse(files, safe=False)
+    except:
+        print(traceback.format_exc())
+        return HttpResponse(status=500)
+
+@require_http_methods(["GET"])
+@login_required(login_url='/page/signin/')
 def index(request):
     return render(
         request, 
         'dashbaord.html', 
-        {}
+        { "ACCOUNTNAME": request.user, "PAGEID": "dashboard" }
+    )
+
+@require_http_methods(["GET"])
+@login_required(login_url='/page/signin/')
+def compare(request):
+    return render(
+        request, 
+        'comparison.html', 
+        { "ACCOUNTNAME": request.user, "PAGEID": "comparison" }
     )
 
 @require_http_methods(["GET"])
@@ -46,3 +69,5 @@ def signout(request):
     except:
         print(traceback.format_exc())
         return HttpResponse(status=500)
+
+
