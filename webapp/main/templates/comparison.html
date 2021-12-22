@@ -31,8 +31,8 @@
           </tr>
           <tr>
             <td>Image</td>
-            <td></td>
-            <td></td>
+            <td id="tdImg1"></td>
+            <td id="tdImg2"></td>
           </tr>
         </thead>
         <tbody>
@@ -43,6 +43,15 @@
 </div>
 
 <script>
+  $("#photos").change(function() {
+    $("#tdImg1").empty();
+    $("#tdImg2").empty();
+
+    const urlTarget = window.location.protocol + "//" + window.location.host + `/media/${$(this).val()}`;
+    $('#tdImg1').html(`<img src='${urlTarget}'></img>`);
+    $('#tdImg2').html(`<img src='${urlTarget}'></img>`);
+  });
+
   function getPhotos() {
     const urlTarget = window.location.protocol + "//" + window.location.host + '/images/all/';
     
@@ -51,7 +60,11 @@
       dataType: 'json',
       url: urlTarget,
       success: function(data) {
-        console.log(data);
+        $.each(data, function(idx, ele) {
+          $('#photos').append(new Option(ele, ele));
+        });
+
+        $('#photos').trigger("change")
       },
       error: function(xhr, textStatus, errorThrown) {
         $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);

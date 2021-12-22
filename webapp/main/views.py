@@ -17,7 +17,7 @@ def imgfiles(request):
     try:
         folder = f"{settings.MEDIA_ROOT}"
         patterns = ("*.jpg", "*.jpeg", "*.png", "*.tif")
-        files = [f.path for f in os.scandir(folder) if any(fnmatch(f, p) for p in patterns)]
+        files = [os.path.basename(f.path) for f in os.scandir(folder) if any(fnmatch(f, p) for p in patterns)]
 
         return JsonResponse(files, safe=False)
     except:

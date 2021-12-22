@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from main import views
 
 urlpatterns = [
@@ -25,4 +27,4 @@ urlpatterns = [
     path('page/dosignin/', views.dosignin),
     path('page/signout/', views.signout),
     path('images/all/', views.imgfiles),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
