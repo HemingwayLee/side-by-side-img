@@ -47,13 +47,13 @@
     $("#tdImg1").empty();
     $("#tdImg2").empty();
 
-    const urlTarget = window.location.protocol + "//" + window.location.host + `/media/${$(this).val()}`;
+    const urlTarget = window.location.protocol + "//" + window.location.host + `/media/images/${$(this).val()}`;
     $('#tdImg1').html(`<img src='${urlTarget}'></img>`);
     $('#tdImg2').html(`<img src='${urlTarget}'></img>`);
   });
 
   function getPhotos() {
-    const urlTarget = window.location.protocol + "//" + window.location.host + '/images/all/';
+    const urlTarget = window.location.protocol + "//" + window.location.host + '/list/images/';
     
     $.ajax({
       type: 'GET',
@@ -64,7 +64,7 @@
           $('#photos').append(new Option(ele, ele));
         });
 
-        $('#photos').trigger("change")
+        $('#photos').trigger("change");
       },
       error: function(xhr, textStatus, errorThrown) {
         $('#msg').text(`${textStatus}: [${xhr.status}] ${errorThrown}`);

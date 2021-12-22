@@ -13,10 +13,19 @@ from django.views.decorators.http import require_http_methods
 
 @require_http_methods(["GET"])
 @login_required(login_url='/page/signin/')
-def imgfiles(request):
+def myfiles(request, item):
     try:
-        folder = f"{settings.MEDIA_ROOT}"
-        patterns = ("*.jpg", "*.jpeg", "*.png", "*.tif")
+        if item == "images":
+            folder = f"{settings.MEDIA_ROOT}/images/"
+            patterns = ("*.jpg", "*.jpeg", "*.png", "*.tif")
+        elif item == "models":
+            folder = f"{settings.MEDIA_ROOT}/models/"
+            patterns = ("*.tflite")
+        else:
+            # TODO: change this
+            folder = f"{settings.MEDIA_ROOT}/methods/"
+            patterns = ("*.xxx")
+        
         files = [os.path.basename(f.path) for f in os.scandir(folder) if any(fnmatch(f, p) for p in patterns)]
 
         return JsonResponse(files, safe=False)
